@@ -12,7 +12,7 @@
       <div>Edad: {{ age }}</div>
       <br />
     </div>
-    <div class="card-action">
+    <div v-if="type!='suggestion'" class="card-action">
       <button @click="clicked">
         <font-awesome-icon
           icon="angle-right"
@@ -32,6 +32,7 @@ export default {
     name: String,
     age: Number,
     id: String,
+    type:String
   },
   methods: {
       clicked(){

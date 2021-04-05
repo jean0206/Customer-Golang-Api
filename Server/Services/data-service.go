@@ -17,13 +17,34 @@ import (
 )
 
 func ImportData(w http.ResponseWriter, r *http.Request) {
-	log.Println("Entra aqi")
-	// respond to the client
-	date := time.Now().Unix()
-	go ImportProducts(date)
-	go ImportCustomers(date)
-	go ImportTransactions(date)
-	w.Write([]byte("{'message':'information has been added'}"))
+
+	body := r.FormValue("date")
+	if body != "" {
+		date, err := strconv.ParseInt(body, 10, 64)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println(date)
+		go ImportProducts(date)
+		go ImportCustomers(date)
+		go ImportTransactions(date)
+		w.Write([]byte("{'message':'information has been added'}"))
+	} else {
+		date := time.Now().Unix()
+		go ImportProducts(date)
+		go ImportCustomers(date)
+		go ImportTransactions(date)
+		w.Write([]byte("{'message':'information has been added'}"))
+	}
+
+	/*
+		log.Println("Entra aqi")
+		// respond to the client
+		date := time.Now().Unix()
+		go ImportProducts(date)
+		go ImportCustomers(date)
+		go ImportTransactions(date)*/
+	//w.Write([]byte(body))
 	//ImportTransactions(date)
 }
 

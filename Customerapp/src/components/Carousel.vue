@@ -10,7 +10,7 @@
         />
       </button>
     </div>
-    <div class="carousel-content">
+    <div  class="carousel-content">
 
              <div      
         v-for="(item, key) in selectProducts"
@@ -66,12 +66,12 @@ props:{
 
    },
   created(){
-         
-      //this.resize()
+        this.addData()
+      this.resize()
   },
   mounted() {
    this.width = window.innerWidth;
-      this.selectProducts= this.products.slice(0,this.amount)
+      
   },
   methods: {
   
@@ -111,7 +111,7 @@ props:{
       }
       },
     moveRight() {
-        this.resize()
+
       if (this.actual + this.amount < this.products.length) {
         this.actual += this.amount;
         this.selectProducts = this.products.slice(
@@ -125,8 +125,13 @@ props:{
         );
       }
     },
-    moveLeft() {
+    addData(){
+        console.log(this.products.length)
+        this.selectProducts= this.products.slice(0,this.amount);
         this.resize()
+    },
+    moveLeft() {
+
         console.log(this.actual)
       if (this.actual - this.amount >= 0) {
         this.actual -= this.amount;

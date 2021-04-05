@@ -10,7 +10,7 @@ import (
 
 func GetCustomers(w http.ResponseWriter, r *http.Request) {
 	query := `{
-		customers(func:has(name)){
+		customers(func:has(name),first: 200){
 			age
 			name
 		  id

@@ -3,13 +3,27 @@
     <div class="list-products">
       Productos comprados por {{ customer.name }}
 
-      <Carousel v-if="products.length != 0" :products="products"></Carousel>
+      <Carousel v-if="products.length>4" :products="products"></Carousel>
     </div>
 
     <div class="list-products">
       Productos que te pueden interesar 
 
-      <Carousel v-if="products.length != 0" :products="suggestions"></Carousel>
+      <Carousel v-if="suggestions.length >1" :products="suggestions"></Carousel>
+    </div>
+
+    <div class="customer-ip">
+      <div class="customer-title">
+
+      Usuarios que compraron desde la misma IP
+      </div>
+      <div class="customer-ip-content">
+
+      <div  class="customer-card" v-for="(item,key) in buyers" :key="key">
+      <CardUser :name="item.name" :age="item.age" :id="item.id" type="suggestion"></CardUser>
+  
+    </div>
+      </div>
     </div>
   </div>
 </template>
@@ -17,10 +31,12 @@
 <script>
 import axios from "axios";
 import Carousel from "../components/Carousel";
+import CardUser from '../components/CardUser.vue';
 
 export default {
   components: {
     Carousel,
+    CardUser,
   },
   data: function() {
     return {
@@ -37,7 +53,7 @@ export default {
       suggestions: [],
     };
   },
-  async mounted() {
+  async created() {
 
     this.customer = JSON.parse(localStorage.getItem("customerInfo"));
     await axios
@@ -62,8 +78,7 @@ export default {
               nameProduct:response.data["product"][0].nameProduct,
               idProduct:response.data["product"][0].idProduct,
               price:response.data["product"][0].price
-            }
-            
+            }           
 
              this.products.push(this.newProduct);
           });
@@ -91,6 +106,7 @@ export default {
             });
         });
       });
+      console.log(this.buyers)
 
     const prices = await this.products.map((product) => product.price);
     const min = Math.min.apply(null, prices);
@@ -105,8 +121,38 @@ export default {
 </script>
 
 <style scoped>
+.about{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
 .list-products {
   font-size: 40px;
-  margin-top: 40px;
+  margin-top: 80px;
+}
+.customer-card{
+    margin-top: 30px;
+  margin-left: 20px;
+}
+
+.customer-ip-content{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.customer-title{
+font-size: 40px;
+}
+
+.customer-ip{
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  margin-top: 50px;
+  
 }
 </style>
