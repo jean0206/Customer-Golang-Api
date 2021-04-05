@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div class="title">
-      Hola
+      Clientes
     </div>
 
     <div v-if="customers.length!=0" class="customer-content">
@@ -9,6 +9,11 @@
     <div  class="customers" v-for="(item,key) in customers" :key="key">
       <UserCard :name=item.name  @clicked="getInfo(key)" :id=item.id :age=item.age></UserCard>
     </div>
+    </div>
+
+    <div class="not-found" v-else> 
+      No hay información de los clientes
+      <img src="../assets/not_found.png"/>
     </div>
     
   </div>
@@ -37,7 +42,7 @@ export default {
   },
   async beforeMount() {
     await axios.get('http://localhost:3000/customer/').then(response=>{
-      this.customers=(response.data['customers'])
+     this.customers=(response.data['customers'])
       console.log(this.customers)
     }).catch(error=>{
       console.log(error.message)
@@ -71,5 +76,13 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+}
+
+.not-found{
+  width: 500px;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 50px;
 }
 </style>

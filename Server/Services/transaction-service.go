@@ -29,6 +29,7 @@ func GetCustomerTransactionById(w http.ResponseWriter, r *http.Request) {
 		customer(func:has(buyerId)) @filter(eq(buyerId,%s)){
 			products
 			ip	
+			buyerId
 	  }
 	}`, userId)
 

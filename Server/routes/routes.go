@@ -55,6 +55,7 @@ func productRoute() http.Handler {
 	r := chi.NewRouter()
 	r.Get("/", Services.GetAllProducts)
 	r.Get("/{productId}", Services.GetProductById)
+	r.Get("/suggestion/{min}/{max}", Services.GetSuggestions)
 	return r
 }
 

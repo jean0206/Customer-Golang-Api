@@ -33,3 +33,19 @@ func GetProductById(w http.ResponseWriter, r *http.Request) {
 	customers := database.GetDBConsult(query)
 	w.Write([]byte(fmt.Sprintf("%s", string(customers))))
 }
+
+func GetSuggestions(w http.ResponseWriter, r *http.Request) {
+	min := chi.URLParam(r, "min")
+	max := chi.URLParam(r, "max")
+
+	query := fmt.Sprintf(`{
+		products(func:has(price),first:10) @filter(le(price, %s) AND ge(price,%s) ) {
+		  price
+		  nameProduct
+		  idProduct
+		}
+	  }`, max, min)
+
+	products := database.GetDBConsult(query)
+	w.Write([]byte(fmt.Sprintf("%s", string(products))))
+}

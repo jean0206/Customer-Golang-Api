@@ -1,7 +1,8 @@
 <template>
+<div class="card">
   <div class="card-container">
     <div class="card-image">
-      <img />
+      <img src="../assets/avatar.png"/>
     </div>
     <div class="card-content">
       <div>ID: {{ id }}</div>
@@ -20,6 +21,7 @@
         />
       </button>
     </div>
+  </div>
   </div>
 </template>
 
@@ -41,22 +43,35 @@ export default {
 
 <style scoped>
 .card-container {
-  width: 343px;
-  height: 136px;
+  
   border-radius: 16px;
   background-color: #fff;
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.04), 0px 2px 6px rgba(0, 0, 0, 0.04),
     0px 0px 1px rgba(0, 0, 0, 0.04);
   display: flex;
+  
 }
+
+.card-container :hover {
+ 
+
+}
+
+
 
 .card-image {
   width: 136px;
   height: 136px;
   left: -12px;
   top: 0px;
-  background-color: black;
   border-radius: 16px;
+  overflow: hidden;
+}
+
+.card-image img{
+  width: 136px;
+  height: 136px;
+  left: -12px;
 }
 .card-content {
   display: flex;
