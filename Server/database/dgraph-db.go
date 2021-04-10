@@ -41,11 +41,6 @@ func MutateDatabase(object []byte) {
 	txn := dg.NewTxn()
 	defer txn.Discard(ctx)
 
-	/*bites, err := json.Marshal(&bbb)
-	if err != nil {
-		log.Fatal(err)
-	}*/
-
 	mu := &api.Mutation{
 		SetJson: object,
 	}
@@ -54,7 +49,7 @@ func MutateDatabase(object []byte) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	//inesperado tenia que hacer esto
+
 	err2 := txn.Commit(context.Background())
 	if err2 != nil {
 		log.Fatal(err2)
@@ -72,14 +67,10 @@ func GetDBConsult(query string) []byte {
 	txn := dg.NewTxn()
 	defer txn.Discard(ctx)
 
-	//clientes := []Cliente{}
-	//res, err := txn.QueryWithVars(ctx, q, map[string]string{"$a": "Alice"})
 	res, err := txn.Query(ctx, query)
 
-	//s := string(`{"operation": "get", "key": "example"}`)
-
 	if err == nil {
-		//fmt.Printf("%s\n", res.Json)
+
 		log.Println(string(res.Json))
 		return (res.Json)
 	} else {
