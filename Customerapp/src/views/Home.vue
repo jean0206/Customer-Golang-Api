@@ -1,135 +1,133 @@
 <template>
   <div class="home">
-
-
-      <NavBar @clicked="openModal"></NavBar>
+    <NavBar @clicked="openModal"></NavBar>
     <div v-if="modal" class="modal-container">
       <div class="modal">
         <div class="close-button">
-     
-
           <font-awesome-icon
-          icon="times-circle"
-          @click="openModal"
-          :style="{ color: '#424AF5', paddingRight:20,paddingTop:10}"
-          size="2x"
-        />
-   
+            icon="times-circle"
+            @click="openModal"
+            :style="{ color: '#424AF5', paddingRight: 20, paddingTop: 10 }"
+            size="2x"
+          />
         </div>
-        <input v-model="date" class="date-input" type="date"/>
-        <button @click="getDate">Importar </button>
+        <input v-model="date" class="date-input" type="date" />
+        <button @click="getDate">Importar</button>
+      </div>
     </div>
-    </div>
-    
 
     <div class="title">
       Clientes
     </div>
 
-    <div v-if="customers.length!=0" class="customer-content">
-
-    <div  class="customers" v-for="(item,key) in customers" :key="key">
-      
-      <UserCard :name=item.name  @clicked="getInfo(key)" :id=item.id :age=item.age></UserCard>
+    <div v-if="customers.length != 0" class="customer-content">
+      <div class="customers" v-for="(item, key) in customers" :key="key">
+        <UserCard
+          :name="item.name"
+          @clicked="getInfo(key)"
+          :id="item.id"
+          :age="item.age"
+        ></UserCard>
+      </div>
     </div>
-    </div>
 
-    <div class="not-found" v-else> 
+    <div class="not-found" v-else>
       No hay información de los clientes
-      <img src="../assets/not_found.png"/>
+      <img src="../assets/not_found.png" />
     </div>
-    
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import axios from 'axios'
-import UserCard from '../components/CardUser'
-import NavBar from '../components/NavBar'
+import axios from "axios";
+import UserCard from "../components/CardUser";
+import NavBar from "../components/NavBar";
 export default {
-  name: 'Home',
+  name: "Home",
   components: {
     UserCard,
-    NavBar
+    NavBar,
   },
-  data: function(){
+  data: function() {
     return {
-      customers:[],
-      modal:false,
-      date:null
-    }
+      customers: [],
+      modal: false,
+      date: null,
+    };
   },
   methods: {
-    async getDate(){
-     await  axios.post("http://localhost:8080/alter",{
-        "drop_op": "DATA"
-      }).then(response=>{
-        console.log(response.data)
-      })
-      console.log(typeof(this.date))
+    async getDate() {
+      await axios
+        .post("http://localhost:8080/alter", {
+          drop_op: "DATA",
+        })
+        .then((response) => {});
+      console.log(typeof this.date);
       const datum = Date.parse(this.date);
-      const newDate = datum/1000
-      await axios.get('http://localhost:3000/data/?date='+newDate).then(response=>{
-
-    }).catch(error=>{
-      console.log(error.message)
-    })
-    this.getCustomers()
-
+      const newDate = datum / 1000;
+      await axios
+        .get("http://localhost:3000/data/?date=" + newDate)
+        .then((response) => {})
+        .catch((error) => {
+          console.log(error.message);
+        });
+      this.getCustomers();
     },
-    openModal(){
-      this.modal=!this.modal
+    openModal() {
+      this.modal = !this.modal;
     },
-    getInfo(index){
-      console.log(typeof(this.customers[index]))
-      localStorage.setItem("customerInfo",JSON.stringify(this.customers[index]))
-      this.$router.push("/about")
+    getInfo(index) {
+      console.log(typeof this.customers[index]);
+      localStorage.setItem(
+        "customerInfo",
+        JSON.stringify(this.customers[index])
+      );
+      this.$router.push("/about");
     },
-    async getCustomers(){
-      this.customers=[]
-      await axios.get('http://localhost:3000/customer/').then(response=>{
-     this.customers=(response.data['customers'])
-      console.log(this.customers)
-    }).catch(error=>{
-      console.log(error.message)
-    })
-    }
+    async getCustomers() {
+      this.customers = [];
+      await axios
+        .get("http://localhost:3000/customer/")
+        .then((response) => {
+          this.customers = response.data["customers"];
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
+    },
   },
   async beforeMount() {
-     await this.getCustomers()    
-
+    await this.getCustomers();
   },
-}
+};
 </script>
 
 <style scoped>
-.home{
+.home {
   display: flex;
   flex-direction: column;
   text-align: center;
 
-
   align-items: center;
 }
 
-.title{
-    font-size: 40px;
-    margin-top: 60px;
+.title {
+  font-size: 40px;
+  margin-top: 60px;
 }
 
-.customers{
+.customers {
   margin-top: 30px;
   margin-left: 20px;
-
 }
-.customer-content{
+.customer-content {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-.not-found{
+.not-found {
   width: 500px;
   height: 500px;
   display: flex;
@@ -137,17 +135,17 @@ export default {
   margin-top: 50px;
 }
 
-.close-button{
+.close-button {
   display: flex;
   justify-content: flex-end;
   width: 100%;
 }
 
-.date-input{
+.date-input {
   width: 250px;
 }
 
-.modal{
+.modal {
   width: 400px;
   height: 400px;
   background-color: white;
@@ -158,25 +156,25 @@ export default {
   justify-content: space-between;
 }
 
-.modal button{
+.modal button {
   width: 150px;
   height: 40px;
   border: none;
   outline: none;
   border-radius: 10px;
-  font-family: 'Roboto';
+  font-family: "Roboto";
   font-weight: bold;
   color: white;
-  background-color: #2e32ac;;
+  background-color: #2e32ac;
   cursor: pointer;
   margin-bottom: 40px;
 }
 
-.modal button:hover{
+.modal button:hover {
   background-color: #2e32acaf;
 }
 
-.modal-container{
+.modal-container {
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -184,11 +182,11 @@ export default {
   position: fixed;
   height: 100%;
   align-items: center;
-  background-color: rgba(161, 161, 161,0.4);
+  background-color: rgba(161, 161, 161, 0.4);
   margin-top: -6px;
 }
 
-.nav{
+.nav {
   width: 100%;
 }
 </style>

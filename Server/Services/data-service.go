@@ -22,30 +22,24 @@ func ImportData(w http.ResponseWriter, r *http.Request) {
 	if body != "" {
 		date, err := strconv.ParseInt(body, 10, 64)
 		if err != nil {
-			log.Fatal(err)
+			w.Header().Set("Content-Type", "application/json")
+			w.Write([]byte("{'message':'error adding the data'}"))
 		}
 		log.Println(date)
 		go ImportProducts(date)
 		go ImportCustomers(date)
 		go ImportTransactions(date)
+		w.Header().Set("Content-Type", "application/json")
 		w.Write([]byte("{'message':'information has been added'}"))
 	} else {
 		date := time.Now().Unix()
 		go ImportProducts(date)
 		go ImportCustomers(date)
-		go ImportTransactions(date)
+		ImportTransactions(date)
+		w.Header().Set("Content-Type", "application/json")
 		w.Write([]byte("{'message':'information has been added'}"))
 	}
 
-	/*
-		log.Println("Entra aqi")
-		// respond to the client
-		date := time.Now().Unix()
-		go ImportProducts(date)
-		go ImportCustomers(date)
-		go ImportTransactions(date)*/
-	//w.Write([]byte(body))
-	//ImportTransactions(date)
 }
 
 func ImportCustomers(actualDate int64) string {
@@ -56,7 +50,7 @@ func ImportCustomers(actualDate int64) string {
 		log.Fatal(err)
 	}
 	defer res.Body.Close()
-	log.Println("Entra aqi")
+
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		log.Fatal(err)
@@ -67,17 +61,12 @@ func ImportCustomers(actualDate int64) string {
 		panic(err)
 	}
 
-	for _, element := range customers {
-		element.UID = "_:newId"
-		log.Println(element.Id)
-		jsonBytes, err := json.Marshal(element)
-		if err != nil {
-			fmt.Println(err)
-		} else {
-			database.MutateDatabase(jsonBytes)
-		}
+	jsonBytes, err := json.Marshal(customers)
 
-		//database.AddCustomer(element)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		database.MutateDatabase(jsonBytes)
 	}
 
 	return string("success")
@@ -177,11 +166,7 @@ func ImportTransactions(actualDate int64) {
 			} else {
 				database.MutateDatabase(jsonBytes)
 			}
-
-			log.Println(newTransaction.Ip)
-			log.Println(newTransaction.Products)
 		}
 
 	}
-
 }

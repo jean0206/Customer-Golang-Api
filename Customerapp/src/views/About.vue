@@ -3,26 +3,31 @@
     <div class="list-products">
       Productos comprados por {{ customer.name }}
 
-      <Carousel v-if="products.length>4" :products="products"></Carousel>
+      <Carousel v-if="products.length > 4" :products="products"></Carousel>
     </div>
 
     <div class="list-products">
-      Productos que te pueden interesar 
+      Productos que te pueden interesar
 
-      <Carousel v-if="suggestions.length >1" :products="suggestions"></Carousel>
+      <Carousel
+        v-if="suggestions.length > 1"
+        :products="suggestions"
+      ></Carousel>
     </div>
 
     <div class="customer-ip">
       <div class="customer-title">
-
-      Usuarios que compraron desde la misma IP
+        Usuarios que compraron desde la misma IP
       </div>
       <div class="customer-ip-content">
-
-      <div  class="customer-card" v-for="(item,key) in buyers" :key="key">
-      <CardUser :name="item.name" :age="item.age" :id="item.id" type="suggestion"></CardUser>
-  
-    </div>
+        <div class="customer-card" v-for="(item, key) in buyers" :key="key">
+          <CardUser
+            :name="item.name"
+            :age="item.age"
+            :id="item.id"
+            type="suggestion"
+          ></CardUser>
+        </div>
       </div>
     </div>
   </div>
@@ -31,7 +36,7 @@
 <script>
 import axios from "axios";
 import Carousel from "../components/Carousel";
-import CardUser from '../components/CardUser.vue';
+import CardUser from "../components/CardUser.vue";
 
 export default {
   components: {
@@ -40,10 +45,10 @@ export default {
   },
   data: function() {
     return {
-      newProduct:{
-        nameProduct:"",
-        idProduct:"",
-        price:0,
+      newProduct: {
+        nameProduct: "",
+        idProduct: "",
+        price: 0,
       },
       customer: {},
       transactions: [],
@@ -54,7 +59,6 @@ export default {
     };
   },
   async created() {
-
     this.customer = JSON.parse(localStorage.getItem("customerInfo"));
     await axios
       .get("http://localhost:3000/transaction/" + this.customer.id)
@@ -64,36 +68,25 @@ export default {
       .catch((error) => {
         console.error(error.message);
       });
-     // console.log(this.transactions)
-      this.transactions.forEach(transaction => {
-        transaction.products.forEach(product=>{
-          this.idProducts.push(product)
-        })
-      })
-      this.idProducts.forEach(async id=>{
-        await axios
-          .get("http://localhost:3000/product/" + id)
-          .then( response => {
-            this.newProduct={
-              nameProduct:response.data["product"][0].nameProduct,
-              idProduct:response.data["product"][0].idProduct,
-              price:response.data["product"][0].price
-            }           
-
-             this.products.push(this.newProduct);
-          });
-      })
-      console.log(this.products)
-/*
-    .map((transaction) => {
-      transaction.products.map(async (product) => {
-        await axios
-          .get("http://localhost:3000/product/" + product)
-          .then( (response) => {
-             this.products.push(response.data["product"][0]);
-          });
+    // console.log(this.transactions)
+    this.transactions.forEach((transaction) => {
+      transaction.products.forEach((product) => {
+        this.idProducts.push(product);
       });
-    });*/
+    });
+    this.idProducts.forEach(async (id) => {
+      await axios
+        .get("http://localhost:3000/product/" + id)
+        .then((response) => {
+          this.newProduct = {
+            nameProduct: response.data["product"][0].nameProduct,
+            idProduct: response.data["product"][0].idProduct,
+            price: response.data["product"][0].price,
+          };
+
+          this.products.push(this.newProduct);
+        });
+    });
 
     await axios
       .get("http://localhost:3000/customer/ip/" + this.transactions[0].ip)
@@ -106,22 +99,22 @@ export default {
             });
         });
       });
-      console.log(this.buyers)
+    console.log(this.buyers);
 
     const prices = await this.products.map((product) => product.price);
     const min = Math.min.apply(null, prices);
     const max = Math.max.apply(null, prices);
     await axios
       .get("http://localhost:3000/product/suggestion/" + min + "/" + max)
-      .then(response => {
-        this.suggestions=(response.data["products"])
+      .then((response) => {
+        this.suggestions = response.data["products"];
       });
   },
 };
 </script>
 
 <style scoped>
-.about{
+.about {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -131,28 +124,27 @@ export default {
   font-size: 40px;
   margin-top: 80px;
 }
-.customer-card{
-    margin-top: 30px;
+.customer-card {
+  margin-top: 30px;
   margin-left: 20px;
 }
 
-.customer-ip-content{
+.customer-ip-content {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-.customer-title{
-font-size: 40px;
+.customer-title {
+  font-size: 40px;
 }
 
-.customer-ip{
+.customer-ip {
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
   width: 100%;
   justify-content: center;
   margin-top: 50px;
-  
 }
 </style>

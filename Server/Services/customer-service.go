@@ -19,6 +19,7 @@ func GetCustomers(w http.ResponseWriter, r *http.Request) {
 
 	customers := database.GetDBConsult(query)
 
+	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte(fmt.Sprintf("%s", string(customers))))
 
 }
@@ -31,7 +32,11 @@ func GetCustomersWithIp(w http.ResponseWriter, r *http.Request) {
 			buyerId
 		}
 	}`, ip)
+
 	customers := database.GetDBConsult(query)
+
+	w.Header().Set("Content-Type", "application/json")
+
 	w.Write([]byte(fmt.Sprintf("%s", string(customers))))
 }
 
@@ -45,5 +50,7 @@ func GetCustomerById(w http.ResponseWriter, r *http.Request) {
 		}
 	}`, id)
 	customers := database.GetDBConsult(query)
+
+	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte(fmt.Sprintf("%s", string(customers))))
 }

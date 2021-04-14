@@ -33,6 +33,7 @@ func GetDgraphClient() (*dgo.Dgraph, CancelFunc) {
 }
 
 func MutateDatabase(object []byte) {
+	log.Println(object)
 	dg, cancel := GetDgraphClient()
 	defer cancel()
 

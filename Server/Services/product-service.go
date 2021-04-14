@@ -31,6 +31,7 @@ func GetProductById(w http.ResponseWriter, r *http.Request) {
 		}
 	}`, id)
 	customers := database.GetDBConsult(query)
+	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte(fmt.Sprintf("%s", string(customers))))
 }
 
@@ -47,5 +48,7 @@ func GetSuggestions(w http.ResponseWriter, r *http.Request) {
 	  }`, max, min)
 
 	products := database.GetDBConsult(query)
+
+	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte(fmt.Sprintf("%s", string(products))))
 }

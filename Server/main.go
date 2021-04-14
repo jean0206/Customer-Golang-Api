@@ -7,10 +7,6 @@ import (
 )
 
 func main() {
-	/*customer := example.Customer{
-		Uid:  "0x6",
-		Name: "Jean Carlos",
-		Age:  20,
-	}*/
+
 	http.ListenAndServe(":3000", routes.GetRoutes())
 }

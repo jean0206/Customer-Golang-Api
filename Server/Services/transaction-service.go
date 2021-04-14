@@ -20,6 +20,7 @@ func GetAllTransactions(w http.ResponseWriter, r *http.Request) {
 	  }`
 	transactions := database.GetDBConsult(query)
 
+	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte(fmt.Sprintf("%s", string(transactions))))
 }
 
@@ -35,5 +36,6 @@ func GetCustomerTransactionById(w http.ResponseWriter, r *http.Request) {
 
 	customers := database.GetDBConsult(query)
 
+	w.Header().Set("Content-Type", "application/json")
 	w.Write([]byte(fmt.Sprintf("%s", string(customers))))
 }

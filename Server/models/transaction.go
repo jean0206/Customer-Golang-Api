@@ -8,3 +8,7 @@ type Transaction struct {
 	Device        string   `json:"device,omitempty"`
 	Products      []string `json:"products,omitempty"`
 }
+
+type Transactions struct {
+	transactions []Transaction `json:"transactions"`
+}
